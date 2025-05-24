@@ -1,0 +1,11 @@
+[ {
+  "nom" : "Panguy Peguy",
+  "email" : "panguy@gmail.com",
+  "password" : "27",
+  "id" : "Triple P"
+}, {
+  "nom" : "Tchami Jerry",
+  "email" : "tjer@yahoo.com",
+  "password" : "27",
+  "id" : "Jerma"
+}]

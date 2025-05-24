@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.eventhandler.controllers.createAccountController">
+
+    <!-- Top: Back Button aligned to the left -->
+    <top>
+        <HBox alignment="TOP_LEFT" style="-fx-padding: 10;">
+            <Button fx:id="backButton"
+                    text="← Back"
+                    onAction="#onBackButtonClick"
+                    style="-fx-font-size: 14; -fx-background-color: transparent;" />
+        </HBox>
+    </top>
+
+    <!-- Center: Main VBox content -->
+    <center>
+        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;">
+            <Text style="-fx-font-size: 24; -fx-font-weight: bold;" text="CREATE NEW ACCOUNT" />
+
+            <GridPane alignment="CENTER" hgap="10" vgap="10">
+                <Label text="Full Name" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField fx:id="fullNameField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="0" />
+
+                <Label text="Email" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
+
+                <Label text="Username" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <TextField fx:id="usernameField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" />
+
+                <Label text="Password" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                <TextField fx:id="passwordField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3" />
+
+                <columnConstraints>
+                    <ColumnConstraints />
+                    <ColumnConstraints />
+                    <ColumnConstraints />
+                    <ColumnConstraints />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints />
+                    <RowConstraints />
+                    <RowConstraints />
+                    <RowConstraints />
+                </rowConstraints>
+            </GridPane>
+
+            <Button fx:id="signUpButton"
+                    onAction="#onSaveButtonClick"
+                    style="-fx-font-size: 16; -fx-pref-width: 200; -fx-pref-height: 40; -fx-background-color: #4CAF50; -fx-text-fill: white;"
+                    text="SIGN UP" />
+
+            <HBox alignment="CENTER" spacing="10">
+                <Label style="-fx-font-size: 12;" text="enspy.cm" />
+                <Label style="-fx-font-size: 12; -fx-text-fill: gray;" text="Event-Handler © Tchami Jerry" />
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

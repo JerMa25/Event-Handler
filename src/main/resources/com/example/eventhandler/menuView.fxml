@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.eventhandler.controllers.MenuController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+
+    <Text text="MENU" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+
+    <VBox alignment="CENTER" spacing="15.0">
+        <!-- Bouton Inscription/Désinscription -->
+        <Button text="Inscription/Désinscription à un événement"
+                onAction="#onSubscriptionClick"
+                style="-fx-font-size: 14; -fx-pref-width: 300; -fx-pref-height: 50; -fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+
+        <!-- Bouton Créer un événement -->
+        <Button text="Créer un événement"
+                onAction="#onCreateEventClick"
+                style="-fx-font-size: 14; -fx-pref-width: 300; -fx-pref-height: 50; -fx-background-color: #2196F3; -fx-text-fill: white;"/>
+
+        <!-- Bouton Notifications -->
+        <Button text="Notifications"
+                onAction="#onNotificationsClick"
+                style="-fx-font-size: 14; -fx-pref-width: 300; -fx-pref-height: 50; -fx-background-color: #FF9800; -fx-text-fill: white;"/>
+    </VBox>
+
+    <HBox spacing="10" alignment="CENTER">
+        <Label text="enspy.cm" style="-fx-font-size: 12;"/>
+        <Label text="Event-Handler © Tchami Jerry" style="-fx-font-size: 12; -fx-text-fill: gray;"/>
+    </HBox>
+</VBox>

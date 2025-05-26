@@ -5,13 +5,16 @@ import com.example.eventhandler.exceptions.ParticipantDejaExistantException;
 import com.example.eventhandler.models.evenement.Evenement;
 import com.example.eventhandler.models.personne.Participant;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +24,23 @@ public class Serialization {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     static {
+        // Enable pretty printing
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+        // Register JavaTime module for LocalDateTime and Duration
+        mapper.registerModule(new JavaTimeModule());
+
+        // Disable writing dates as timestamps
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+        // Configure polymorphic type handling
+        mapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
+
+        // Don't fail on unknown properties during deserialization
+        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
+        // Enable default typing for polymorphic serialization (if needed)
+        // mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
     }
 
     /**
@@ -76,6 +95,16 @@ public class Serialization {
         }
     }
 
+    public static void saveAllParticipant(List<Participant> participants) {
+        try {
+            mapper.writeValue(new File(PARTICIPANT_DATA_FILE_PATH), participants);
+            System.out.println("Successfully saved " + participants.size() + " participants.");
+        } catch (Exception e) {
+            System.err.println("Error saving participants to file:");
+            e.printStackTrace();
+        }
+    }
+
     public static boolean addEvenement(Evenement evenement) throws EvenementDejaExistantException {
         try {
             File outputFile = new File(EVENT_DATA_FILE_PATH);
@@ -92,14 +121,13 @@ public class Serialization {
                 }
             }
 
-            // Check for duplicates BEFORE adding
-            boolean locationExists = evenements.stream()
-                    .anyMatch(existing -> existing.getLieu().equals(evenement.getLieu()));
-            boolean dateTimeExists = evenements.stream()
-                    .anyMatch(existing -> existing.getDate().equals(evenement.getDate()));
+            // Check if location and datetime coincides
+            boolean hasLocationDateTimeConflict = evenements.stream().anyMatch(existing ->
+                    existing.getLieu().equals(evenement.getLieu()) && hasTimeConflict(existing, evenement));
 
-            if (locationExists || dateTimeExists) {
-                throw new EvenementDejaExistantException(evenement, evenements);
+            if (hasLocationDateTimeConflict) {
+                // Pass the existing events list to your exception constructor
+                throw new EvenementDejaExistantException();
             }
 
             // Add new event to the list
@@ -114,10 +142,34 @@ public class Serialization {
             System.out.println("Event added successfully!");
             return true;
 
+        } catch (EvenementDejaExistantException e) {
+            // Re-throw the specific exception so the caller can handle it
+            throw e;
         } catch (Exception e) {
+            // Only catch other exceptions, not our custom one
             System.err.println("Error during event addition:");
             e.printStackTrace();
             return false;
         }
     }
+
+    private static boolean hasTimeConflict(Evenement existingEvent, Evenement newEvent) {
+        var existingStart = existingEvent.getDate();
+        var newStart = newEvent.getDate();
+
+        // Check if events are on the same date
+        if (!existingStart.toLocalDate().equals(newStart.toLocalDate())) {
+            return false;
+        }
+
+        var existingEnd = existingStart.plus(existingEvent.getDuration());
+        var newEnd = newStart.plus(newEvent.getDuration());
+
+        // Check for overlap
+        boolean newStartsWithinExisting = !newStart.isBefore(existingStart) && newStart.isBefore(existingEnd);
+        boolean existingStartsWithinNew = !existingStart.isBefore(newStart) && existingStart.isBefore(newEnd);
+
+        return newStartsWithinExisting || existingStartsWithinNew;
+    }
+
 }

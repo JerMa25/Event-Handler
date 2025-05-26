@@ -11,7 +11,9 @@ module com.example.eventhandler {
     requires eu.hansolo.tilesfx;
     requires com.fasterxml.jackson.databind;
     requires java.desktop;
+    requires com.fasterxml.jackson.datatype.jsr310;
     exports com.example.eventhandler.models.personne;
+    exports com.example.eventhandler.models.evenement;
 
     opens com.example.eventhandler to javafx.fxml;
     exports com.example.eventhandler.application;

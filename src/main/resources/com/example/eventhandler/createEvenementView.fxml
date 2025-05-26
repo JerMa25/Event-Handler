@@ -9,45 +9,77 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.BorderPane?>
 
-<VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.eventhandler.controllers.CreateEvenementController">
-    <Text style="-fx-font-size: 24; -fx-font-weight: bold;" text="NEW EVENT" />
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.eventhandler.controllers.CreateEvenementController">
 
-    <GridPane alignment="CENTER" hgap="10" vgap="10">
-        <Label text="Event Name" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-        <TextField fx:id="nomField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="0" />
+    <!-- Top: Back Button aligned to the left -->
+    <top>
+        <HBox alignment="TOP_LEFT" style="-fx-padding: 10;">
+            <Button fx:id="backButton"
+                    text="← Back"
+                    onAction="#onBackButtonClick"
+                    style="-fx-font-size: 14; -fx-background-color: transparent;" />
+        </HBox>
+    </top>
 
-        <Label text="Date" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-        <TextField fx:id="dateField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" promptText="Exple: Mercredi, 21 Janvier 2023 à 13:30" />
+    <!-- Center: Main VBox content -->
+    <center>
 
-        <Label text="Location" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-        <TextField fx:id="locationField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" />
+        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+            <Text style="-fx-font-size: 24; -fx-font-weight: bold;" text="NEW EVENT" />
 
-        <Label text="Capacity" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-        <TextField fx:id="maxCapacityField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3" />
+            <GridPane alignment="CENTER" hgap="10" vgap="10">
+                <Label text="Event Name:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField fx:id="nomField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="0" />
 
-        <Label text="Duration" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-        <TextField fx:id="durationField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" promptText="Ex: 2hrs or 2hrs30mins" />
+                <Label text="Date:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <TextField fx:id="dateField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" promptText="Exple: Mercredi, 21 Janvier 2023 à 13:30" />
 
-        <columnConstraints>
-            <ColumnConstraints />
-            <ColumnConstraints />
-            <ColumnConstraints />
-            <ColumnConstraints />
-        </columnConstraints>
-        <rowConstraints>
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-        </rowConstraints>
-    </GridPane>
+                <Label text="Location:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <TextField fx:id="locationField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" />
 
-    <Button fx:id="createButton" onAction="#onCreateButtonClick" style="-fx-font-size: 16; -fx-pref-width: 200; -fx-pref-height: 40; -fx-background-color: #4CAF50; -fx-text-fill: white;" text="CREATE" />
+                <Label text="Capacity:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                <TextField fx:id="maxCapacityField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3" />
 
-    <HBox alignment="CENTER" spacing="10">
-        <Label style="-fx-font-size: 12;" text="enspy.cm" />
-        <Label style="-fx-font-size: 12; -fx-text-fill: gray;" text="Event-Handler © Tchami Jerry" />
-    </HBox>
-</VBox>
+                <Label text="Duration:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                <TextField fx:id="durationField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" promptText="Ex: 2hrs or 2hrs30mins" />
+
+                <Label fx:id="ArtisteLabel" text="Artiste:" GridPane.columnIndex="0" GridPane.rowIndex="5" visible="false"/>
+                <TextField fx:id="artisteField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="5" visible="false" />
+
+                <Label fx:id="ThemeLabel" text="Theme:" GridPane.columnIndex="0" GridPane.rowIndex="5" visible="false"/>
+                <TextField fx:id="themeField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="5" visible="false" />
+
+                <Label fx:id="GenremusicalLabel" text="Genre Musical:" GridPane.columnIndex="0" GridPane.rowIndex="6" visible="false"/>
+                <TextField fx:id="gernreMusicalField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="6" visible="false" />
+
+                <Label fx:id="IntervenantsLabel" text="Intervenants:" GridPane.columnIndex="0" GridPane.rowIndex="6" visible="false"/>
+                <TextField fx:id="intervenantsField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="6" visible="false" />
+
+                <columnConstraints>
+                    <ColumnConstraints />
+                    <ColumnConstraints />
+                    <ColumnConstraints />
+                    <ColumnConstraints />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints />
+                    <RowConstraints />
+                    <RowConstraints />
+                    <RowConstraints />
+                    <RowConstraints />
+                </rowConstraints>
+            </GridPane>
+
+            <Button fx:id="createButton" onAction="#onCreateButtonClick" style="-fx-font-size: 16; -fx-pref-width: 200; -fx-pref-height: 40; -fx-background-color: #4CAF50; -fx-text-fill: white;" text="CREATE" />
+
+            <HBox alignment="CENTER" spacing="10">
+                <Label style="-fx-font-size: 12;" text="enspy.cm" />
+                <Label style="-fx-font-size: 12; -fx-text-fill: gray;" text="Event-Handler © Tchami Jerry" />
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

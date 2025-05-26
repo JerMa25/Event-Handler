@@ -1,15 +1,17 @@
+// Evenement.java (abstract class)
 package com.example.eventhandler.models.evenement;
 
-import com.example.eventhandler.models.personne.Participant;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.time.Duration;
-import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import java.time.LocalDateTime;
+import java.time.Duration;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.DEDUCTION)
+@JsonSubTypes({
+        @JsonSubTypes.Type(Concert.class),
+        @JsonSubTypes.Type(Conference.class)
+})
 public abstract class Evenement {
-
     private int id;
     private String nom;
     private LocalDateTime date;
@@ -17,18 +19,10 @@ public abstract class Evenement {
     private int capaciteMax;
     private Duration duration;
 
-    //constructors
-    public Evenement(){}
+    // Default constructor (required for Jackson)
+    public Evenement() {}
 
-    @JsonCreator
-    public Evenement(
-            @JsonProperty("id")int id,
-            @JsonProperty("nom")String nom,
-            @JsonProperty("date/heure")LocalDateTime date,
-            @JsonProperty("lieu")String lieu,
-            @JsonProperty("capaciteMax")int capaciteMax,
-            @JsonProperty("Duree")Duration duration
-    ){
+    public Evenement(int id, String nom, LocalDateTime date, String lieu, int capaciteMax, Duration duration) {
         this.id = id;
         this.nom = nom;
         this.date = date;
@@ -37,24 +31,22 @@ public abstract class Evenement {
         this.duration = duration;
     }
 
-    //getters et setters
-    public int getId() {return id;}
-    public String getNom() {return nom;}
-    public LocalDateTime getDate() {return date;}
-    public String getLieu() {return lieu;}
-    public int getCapaciteMax() {return capaciteMax;}
-    public Duration getDuration() {return duration;}
+    // Getters and setters
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-    public void setId(int id) {this.id = id;}
-    public void setNom(String nom) {this.nom = nom;}
-    public void setDate(LocalDateTime date) {this.date = date;}
-    public void setLieu(String lieu) {this.lieu = lieu;}
-    public void setCapaciteMax(int capaciteMax) {this.capaciteMax = capaciteMax;}
-    public void setDuration(Duration duration) {this.duration = duration;}
+    public String getNom() { return nom; }
+    public void setNom(String nom) { this.nom = nom; }
 
-    //methodes
-    public void ajouterParticipant(Participant participant){}
-    public void annuler(){}
-    public void afficherDetails(){}
+    public LocalDateTime getDate() { return date; }
+    public void setDate(LocalDateTime date) { this.date = date; }
 
+    public String getLieu() { return lieu; }
+    public void setLieu(String lieu) { this.lieu = lieu; }
+
+    public int getCapaciteMax() { return capaciteMax; }
+    public void setCapaciteMax(int capaciteMax) { this.capaciteMax = capaciteMax; }
+
+    public Duration getDuration() { return duration; }
+    public void setDuration(Duration duration) { this.duration = duration; }
 }

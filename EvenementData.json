@@ -1,0 +1,37 @@
+[ {
+  "id" : 1,
+  "nom" : "Yafe",
+  "date" : "2020-01-27T10:00:00",
+  "lieu" : "Yaounde",
+  "capaciteMax" : 200,
+  "duration" : 10800.000000000,
+  "artiste" : "Minks",
+  "genreMusical" : "eew"
+}, {
+  "id" : 2,
+  "nom" : "Youpi",
+  "date" : "2005-06-23T13:00:00",
+  "lieu" : "Buea",
+  "capaciteMax" : 200,
+  "duration" : 14400.000000000,
+  "artiste" : "Locko",
+  "genreMusical" : "tyre"
+}, {
+  "id" : 3,
+  "nom" : "Re des pipos",
+  "date" : "2019-06-25T19:00:00",
+  "lieu" : "Polytech",
+  "capaciteMax" : 200,
+  "duration" : 10800.000000000,
+  "artiste" : "Rolain",
+  "genreMusical" : "raegge"
+}, {
+  "id" : 4,
+  "nom" : "Music",
+  "date" : "2012-01-24T03:00:00",
+  "lieu" : "Douala",
+  "capaciteMax" : 200,
+  "duration" : 14400.000000000,
+  "artiste" : "Maes",
+  "genreMusical" : "wqe"
+} ]

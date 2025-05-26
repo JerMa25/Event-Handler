@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.eventhandler.controllers.EventTypeController">
+
+    <!-- Top: Back Button aligned to the left -->
+    <top>
+        <HBox alignment="TOP_LEFT" style="-fx-padding: 10;">
+            <Button fx:id="backButton"
+                    text="← Back"
+                    onAction="#onBackButtonClick"
+                    style="-fx-font-size: 14; -fx-background-color: transparent;" />
+        </HBox>
+    </top>
+
+    <center>
+        <VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/8.0.171"
+        xmlns:fx="http://javafx.com/fxml/1">
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+            </padding>
+
+            <Text text="Event Type" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+            <VBox alignment="CENTER" spacing="15.0">
+                <!-- Bouton Créer un compte -->
+                <Button text="CONCERT"
+                    onAction="#onConcertClick"
+                    style="-fx-font-size: 16; -fx-pref-width: 200; -fx-pref-height: 40; -fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+
+                <!-- Bouton Login -->
+                <Button text="CONFERENCE"
+                    onAction="#onConferenceClick"
+                    style="-fx-font-size: 16; -fx-pref-width: 200; -fx-pref-height: 40; -fx-background-color: #2196F3; -fx-text-fill: white;"/>
+            </VBox>
+
+            <HBox spacing="10" alignment="CENTER">
+                <Label text="enspy.cm" style="-fx-font-size: 12;"/>
+                <Label text="Event-Handler © Tchami Jerry" style="-fx-font-size: 12; -fx-text-fill: gray;"/>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

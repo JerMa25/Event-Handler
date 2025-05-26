@@ -1,8 +1,12 @@
 package com.example.eventhandler.persistence;
 
+import com.example.eventhandler.models.evenement.Evenement;
 import com.example.eventhandler.models.personne.Participant;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -13,7 +17,28 @@ import java.util.Optional;
 
 public class Deserialization {
     private static final String PARTICIPANT_DATA_FILE_PATH = "/home/jerma/Desktop/Cours 3GI/Semestre 2/POO 2/TP/Event-Handler/ParticipantData.json";
+    private static final String EVENT_DATA_FILE_PATH = "/home/jerma/Desktop/Cours 3GI/Semestre 2/POO 2/TP/Event-Handler/EvenementData.json";
     private static final ObjectMapper mapper = new ObjectMapper();
+
+    static {
+        // Enable pretty printing
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+        // Register JavaTime module for LocalDateTime and Duration
+        mapper.registerModule(new JavaTimeModule());
+
+        // Disable writing dates as timestamps
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+        // Configure polymorphic type handling
+        mapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
+
+        // Don't fail on unknown properties during deserialization
+        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
+        // Enable default typing for polymorphic serialization (if needed)
+        // mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
+    }
 
     /**
      * Reads all participants from the JSON file
@@ -72,4 +97,47 @@ public class Deserialization {
     public static int getParticipantCount() {
         return getAllParticipants().size();
     }
+
+
+    public static List<Evenement> getAllEvenements() {
+        try {
+            File file = new File(EVENT_DATA_FILE_PATH);
+
+            // Check if file exists and has content
+            if (!file.exists() || file.length() == 0) {
+                System.out.println("No data file found or file is empty.");
+                return new ArrayList<>();
+            }
+
+            // Read and parse JSON file
+            String content = Files.readString(file.toPath(), StandardCharsets.UTF_8);
+            List<Evenement> evenements = mapper.readValue(content, new TypeReference<List<Evenement>>() {});
+
+            System.out.println("Successfully loaded " + evenements.size() + " evenements.");
+            return evenements;
+
+        } catch (Exception e) {
+            System.err.println("Error reading evenements from file:");
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+
+    public static Evenement getEvenement(int id){
+        List<Evenement> evenements = getAllEvenements();
+
+        for (Evenement evenement : evenements) {
+            if (evenement.getId() == id) {
+                return evenement;
+            }
+        }
+
+        return null;
+    }
+
+    public static int getEvenementCount() {
+        return getAllEvenements().size();
+    }
+
 }

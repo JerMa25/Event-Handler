@@ -1,8 +1,10 @@
 package com.example.eventhandler;
 
+import com.example.eventhandler.models.personne.Participant;
+
 public class UserSession {
     private static UserSession instance;
-    private String userId;
+    private Participant user;
 
     private UserSession() {}
 
@@ -13,15 +15,15 @@ public class UserSession {
         return instance;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUser(Participant user) {
+        this.user = user;
     }
 
-    public String getUserId() {
-        return userId;
+    public Participant getUser() {
+        return user;
     }
 
     public void clear() {
-        userId = null;
+        user = null;
     }
 }

@@ -26,8 +26,12 @@ public class LoginController {
             AlertBox.showAlert("Error","mot de passe ou nom d'utilisateur incorrect.", Alert.AlertType.ERROR);
             return;
         }else {
-            UserSession.getInstance().setUserId(id);
+            UserSession.getInstance().setUser(p);
             EventHandlerApplication.setRoot("menuView");
         }
+    }
+
+    public void onBackButtonClick(ActionEvent actionEvent) throws IOException {
+        EventHandlerApplication.setRoot("hello-view");
     }
 }

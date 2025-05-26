@@ -16,7 +16,7 @@
 
     <VBox alignment="CENTER" spacing="15.0">
         <!-- Bouton Inscription/Désinscription -->
-        <Button text="Inscription/Désinscription à un événement"
+        <Button text="Inscription à un événement"
                 onAction="#onSubscriptionClick"
                 style="-fx-font-size: 14; -fx-pref-width: 300; -fx-pref-height: 50; -fx-background-color: #4CAF50; -fx-text-fill: white;"/>
 
@@ -29,6 +29,11 @@
         <Button text="Notifications"
                 onAction="#onNotificationsClick"
                 style="-fx-font-size: 14; -fx-pref-width: 300; -fx-pref-height: 50; -fx-background-color: #FF9800; -fx-text-fill: white;"/>
+
+        <!-- Nouveau bouton Mes événements -->
+        <Button text="Mes événements"
+                onAction="#onMyEventsClick"
+                style="-fx-font-size: 14; -fx-pref-width: 300; -fx-pref-height: 50; -fx-background-color: #9C27B0; -fx-text-fill: white;"/>
     </VBox>
 
     <HBox spacing="10" alignment="CENTER">

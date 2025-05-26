@@ -1,7 +1,22 @@
 package com.example.eventhandler.models.personne;
 
+import com.example.eventhandler.models.evenement.Concert;
+import com.example.eventhandler.models.evenement.Conference;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Participant.class, name = "participant"),
+        @JsonSubTypes.Type(value = Organisateur.class, name = "organisateur"),
+        @JsonSubTypes.Type(value = Intervenant.class, name = "intervenant")
+})
 
 public class Participant{
 

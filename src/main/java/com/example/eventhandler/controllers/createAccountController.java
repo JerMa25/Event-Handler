@@ -9,7 +9,6 @@ import com.example.eventhandler.persistence.Serialization;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 import java.io.IOException;
@@ -37,20 +36,23 @@ public class createAccountController {
         // Create new participant
         Participant p = new Participant(id, nom, email, password);
 
+        boolean success;
+
         try {
-            System.out.println("Adding new participant to existing records.");
 
             // Add participant using Serialization class
-            boolean success = Serialization.addParticipant(p);
+            success = Serialization.addParticipant(p);
 
-            if (success) {
-                AlertBox.showAlert("Success", "Account created successfully!\nUsername: " + id, Alert.AlertType.INFORMATION);
-                System.out.println("New participant count: " + Deserialization.getParticipantCount());
-            } else {
-                AlertBox.showAlert("Error", "Failed to create account. Please try again.", Alert.AlertType.ERROR);
-            }
-        }catch (ParticipantDejaExistantException e){
-            AlertBox.showAlert("Error",e.getMessage(), Alert.AlertType.ERROR);
+        }catch (ParticipantDejaExistantException e) {
+            AlertBox.showAlert("Error", e.getMessage(), Alert.AlertType.ERROR);
+            return;
+
+        }if (success) {
+            System.out.println("Adding new participant to existing records.");
+            AlertBox.showAlert("Success", "Account created successfully!\nUsername: " + id, Alert.AlertType.INFORMATION);
+            System.out.println("New participant count: " + Deserialization.getParticipantCount());
+        } else {
+            AlertBox.showAlert("Error", "Failed to create account. Please try again.", Alert.AlertType.ERROR);
         }
 
         EventHandlerApplication.setRoot("loginView");

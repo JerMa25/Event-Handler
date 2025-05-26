@@ -1,9 +1,19 @@
 [ {
-  "type" : "participant",
+  "type" : "organisateur",
+  "id" : "Triple P",
   "nom" : "Panguy Peguy",
   "email" : "panguy@gmail.com",
   "password" : "27",
-  "id" : "Triple P"
+  "evenements" : [ {
+    "id" : 5,
+    "nom" : "YaFe",
+    "date" : "2025-06-10T12:00:00",
+    "lieu" : "Yaounde",
+    "capaciteMax" : 300,
+    "duration" : 14400.000000000,
+    "artiste" : "Locko",
+    "genreMusical" : "Slow"
+  } ]
 }, {
   "type" : "organisateur",
   "id" : "Jerma",
@@ -20,4 +30,10 @@
     "artiste" : "Maes",
     "genreMusical" : "wqe"
   } ]
+}, {
+  "type" : "participant",
+  "nom" : "tchami",
+  "email" : "hvyhu",
+  "password" : "12345",
+  "id" : "jerma"
 } ]

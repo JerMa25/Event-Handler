@@ -10,10 +10,12 @@ public class myEventsController {
         EventHandlerApplication.setRoot("menuView");
     }
 
-    public void onSubscribedClick(ActionEvent actionEvent) {
+    public void onSubscribedClick(ActionEvent actionEvent) throws IOException {
+        EventHandlerApplication.setRoot("SubscribedListView");
     }
 
-    public void onCreatedClick(ActionEvent actionEvent) {
+    public void onCreatedClick(ActionEvent actionEvent) throws IOException {
+        EventHandlerApplication.setRoot("CreatedListView");
 
     }
 }

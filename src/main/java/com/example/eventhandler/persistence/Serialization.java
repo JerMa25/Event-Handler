@@ -16,11 +16,14 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Serialization {
     private static final String PARTICIPANT_DATA_FILE_PATH = "/home/jerma/Desktop/Cours 3GI/Semestre 2/POO 2/TP/Event-Handler/ParticipantData.json";
     private static final String EVENT_DATA_FILE_PATH = "/home/jerma/Desktop/Cours 3GI/Semestre 2/POO 2/TP/Event-Handler/EvenementData.json";
+    private static final String PARTICIPANT_EVENT_FILE_PATH = "/home/jerma/Desktop/Cours 3GI/Semestre 2/POO 2/TP/Event-Handler/ParticipantsAuxEvenements.json";
     private static final ObjectMapper mapper = new ObjectMapper();
 
     static {
@@ -78,6 +81,7 @@ public class Serialization {
             participants.add(participant);
 
             // Write updated list to file
+            /*mapper.writerFor(new TypeReference<List<Participant>>() {}).withAttribute("type","Participant");    I'll be back*/
             String jsonString = mapper.writeValueAsString(participants);
             try (FileOutputStream fos = new FileOutputStream(outputFile)) {
                 fos.write(jsonString.getBytes(StandardCharsets.UTF_8));
@@ -172,4 +176,53 @@ public class Serialization {
         return newStartsWithinExisting || existingStartsWithinNew;
     }
 
+    public static boolean addParticipantsAuxEvenements(Participant participant, Evenement evenement) throws EvenementDejaExistantException {
+        try {
+            File outputFile = new File(PARTICIPANT_EVENT_FILE_PATH);
+            HashMap<String, Integer> participantEvent = new HashMap<>();
+
+            // Read existing data if file exists
+            if (outputFile.exists() && outputFile.length() > 0) {
+                try {
+                    String existingContent = Files.readString(outputFile.toPath(), StandardCharsets.UTF_8);
+                    participantEvent = mapper.readValue(existingContent, new TypeReference<HashMap<String, Integer>>() {});
+                    System.out.println("Existing data loaded from file.");
+                } catch (Exception e) {
+                    System.out.println("Could not read existing file or file is not a valid JSON. Starting fresh.");
+                    participantEvent = new HashMap<>();
+                }
+            } else {
+                // File doesn't exist or is empty, create new HashMap
+                System.out.println("File doesn't exist or is empty. Creating new registration file.");
+                participantEvent = new HashMap<>();
+
+                // Create parent directories if they don't exist
+                outputFile.getParentFile().mkdirs();
+            }
+
+            // Check if participant is already registered for this event
+            String participantKey = participant.getId();
+            if (participantEvent.containsKey(participantKey) && participantEvent.get(participantKey).equals(evenement.getId())) {
+                System.out.println("Participant " + participant.getId() + " is already registered for event " + evenement.getNom());
+                return false; // Already registered
+            }
+
+            // Add the registration
+            participantEvent.put(participantKey, evenement.getId());
+
+            // Write updated map to file
+            String jsonString = mapper.writeValueAsString(participantEvent);
+            try (FileOutputStream fos = new FileOutputStream(outputFile)) {
+                fos.write(jsonString.getBytes(StandardCharsets.UTF_8));
+            }
+
+            System.out.println("Registration of participant '" + participant.getId() + "' to event '" + evenement.getNom() + "' successful!");
+            return true;
+
+        } catch (Exception e) {
+            System.err.println("Error during registration: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

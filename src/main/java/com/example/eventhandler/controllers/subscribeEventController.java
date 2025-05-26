@@ -1,5 +1,6 @@
 package com.example.eventhandler.controllers;
 
+import com.example.eventhandler.UserSession;
 import com.example.eventhandler.application.EventHandlerApplication;
 import com.example.eventhandler.models.personne.Organisateur;
 import com.example.eventhandler.models.personne.Participant;
@@ -7,8 +8,10 @@ import com.example.eventhandler.models.evenement.Evenement;
 import com.example.eventhandler.models.evenement.Conference;
 import com.example.eventhandler.models.evenement.Concert;
 import com.example.eventhandler.persistence.Deserialization;
+import com.example.eventhandler.persistence.Serialization;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.Label;
@@ -26,9 +29,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import static com.example.eventhandler.AlertBox.showAlert;
+
 public class subscribeEventController implements Initializable{
     public ListView<String> listViewEvenements;
-    private List<Evenement> evenementsList = new ArrayList<>(); // Pour stocker les événements réels
+    private final List<Evenement> evenementsList = new ArrayList<>(); // Pour stocker les événements réels
 
     @Override
     public void initialize(URL location, ResourceBundle resources){
@@ -171,15 +176,34 @@ public class subscribeEventController implements Initializable{
     }
 
     public void onSubscribeEvenementClick(ActionEvent actionEvent) {
-        // Récupérer l'index de l'événement sélectionné
-        int selectedIndex = listViewEvenements.getSelectionModel().getSelectedIndex();
-        if (selectedIndex >= 0 && selectedIndex < evenementsList.size()) {
+        try {
+            // Récupérer l'index de l'événement sélectionné
+            int selectedIndex = listViewEvenements.getSelectionModel().getSelectedIndex();
+
+            if (selectedIndex < 0 || selectedIndex >= evenementsList.size()) {
+                // Afficher une alerte à l'utilisateur au lieu d'un simple println
+                showAlert("Erreur", "Veuillez sélectionner un événement dans la liste.", Alert.AlertType.ERROR);
+                return;
+            }
+
             Evenement selectedEvent = evenementsList.get(selectedIndex);
-            // Logique pour s'abonner à l'événement sélectionné
-            System.out.println("Inscription à l'événement: " + selectedEvent.getNom());
-            // Ici vous pouvez ajouter la logique pour inscrire le participant
-        } else {
-            System.out.println("Aucun événement sélectionné");
+            System.out.println(selectedEvent.getNom());
+            Participant currentUser = UserSession.getInstance().getUser();
+            System.out.println(currentUser.getId());
+
+
+            // Procéder à l'inscription
+            boolean success = Serialization.addParticipantsAuxEvenements(currentUser, selectedEvent);
+
+            if (success) {
+                showAlert("Succès", "Inscription réussie à l'événement : " + selectedEvent.getNom(), Alert.AlertType.ERROR);
+            } else {
+                showAlert("Erreur", "Échec de l'inscription. Veuillez réessayer.", Alert.AlertType.ERROR);
+            }
+
+        } catch (Exception e) {
+            showAlert("Erreur", "Une erreur inattendue s'est produite : " + e.getMessage(), Alert.AlertType.ERROR);
+            e.printStackTrace();
         }
     }
 

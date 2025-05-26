@@ -11,13 +11,12 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class Deserialization {
     private static final String PARTICIPANT_DATA_FILE_PATH = "/home/jerma/Desktop/Cours 3GI/Semestre 2/POO 2/TP/Event-Handler/ParticipantData.json";
     private static final String EVENT_DATA_FILE_PATH = "/home/jerma/Desktop/Cours 3GI/Semestre 2/POO 2/TP/Event-Handler/EvenementData.json";
+    private static final String PARTICIPANT_EVENT_FILE_PATH = "/home/jerma/Desktop/Cours 3GI/Semestre 2/POO 2/TP/Event-Handler/ParticipantsAuxEvenements.json";
     private static final ObjectMapper mapper = new ObjectMapper();
 
     static {
@@ -138,6 +137,28 @@ public class Deserialization {
 
     public static int getEvenementCount() {
         return getAllEvenements().size();
+    }
+
+    public static HashMap<String, Integer> getParticipantsAuxEvenements(){
+        try {
+            File file = new File(PARTICIPANT_EVENT_FILE_PATH);
+
+            // Check if file exists and has content
+            if (!file.exists() || file.length() == 0) {
+                System.out.println("No data file found or file is empty.");
+                return new HashMap<>();
+            }
+
+            // Read and parse JSON file
+            String content = Files.readString(file.toPath(), StandardCharsets.UTF_8);
+
+            return mapper.readValue(content, new TypeReference<HashMap<String, Integer>>() {});
+
+        } catch (Exception e) {
+            System.err.println("Error reading participants from file:");
+            e.printStackTrace();
+            return new HashMap<>();
+        }
     }
 
 }

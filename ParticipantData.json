@@ -1,39 +1,16 @@
 [ {
-  "type" : "organisateur",
-  "id" : "Triple P",
-  "nom" : "Panguy Peguy",
-  "email" : "panguy@gmail.com",
-  "password" : "27",
-  "evenements" : [ {
-    "id" : 5,
-    "nom" : "YaFe",
-    "date" : "2025-06-10T12:00:00",
-    "lieu" : "Yaounde",
-    "capaciteMax" : 300,
-    "duration" : 14400.000000000,
-    "artiste" : "Locko",
-    "genreMusical" : "Slow"
-  } ]
-}, {
-  "type" : "organisateur",
-  "id" : "Jerma",
   "nom" : "Tchami Jerry",
-  "email" : "tjer@yahoo.com",
-  "password" : "27",
-  "evenements" : [ {
-    "id" : 4,
-    "nom" : "Music",
-    "date" : "2012-01-24T03:00:00",
-    "lieu" : "Douala",
-    "capaciteMax" : 200,
-    "duration" : 14400.000000000,
-    "artiste" : "Maes",
-    "genreMusical" : "wqe"
-  } ]
+  "email" : "tchamijerry@gmail.com",
+  "password" : "1234",
+  "id" : "Jerma"
 }, {
-  "type" : "participant",
-  "nom" : "tchami",
-  "email" : "hvyhu",
-  "password" : "12345",
-  "id" : "jerma"
+  "nom" : "Tchapet Rolain",
+  "email" : "rolaintchapet@gmail.com",
+  "password" : "4567",
+  "id" : "Maes"
+}, {
+  "nom" : "Tasse Jerry",
+  "email" : "tassej@gmail.com",
+  "password" : "890",
+  "id" : "arole"
 } ]

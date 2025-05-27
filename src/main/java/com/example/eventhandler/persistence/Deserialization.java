@@ -1,7 +1,9 @@
 package com.example.eventhandler.persistence;
 
 import com.example.eventhandler.models.evenement.Evenement;
+import com.example.eventhandler.models.personne.Organisateur;
 import com.example.eventhandler.models.personne.Participant;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,12 +13,15 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class Deserialization {
-    private static final String PARTICIPANT_DATA_FILE_PATH = "/home/jerma/Desktop/Cours 3GI/Semestre 2/POO 2/TP/Event-Handler/ParticipantData.json";
-    private static final String EVENT_DATA_FILE_PATH = "/home/jerma/Desktop/Cours 3GI/Semestre 2/POO 2/TP/Event-Handler/EvenementData.json";
-    private static final String PARTICIPANT_EVENT_FILE_PATH = "/home/jerma/Desktop/Cours 3GI/Semestre 2/POO 2/TP/Event-Handler/ParticipantsAuxEvenements.json";
+    private static final String PROJECT_ROOT = System.getProperty("user.dir");
+    private static final String PARTICIPANT_DATA_FILE_PATH = Paths.get(PROJECT_ROOT, "ParticipantData.json").toString();
+    private static final String EVENT_DATA_FILE_PATH = Paths.get(PROJECT_ROOT, "EvenementData.json").toString();
+    private static final String PARTICIPANT_EVENT_FILE_PATH = Paths.get(PROJECT_ROOT, "ParticipantsAuxEvenements.json").toString();
+    private static final String ORGANISATEUR_DATA_FILE_PATH = Paths.get(PROJECT_ROOT, "OrganisateurData.json").toString();
     private static final ObjectMapper mapper = new ObjectMapper();
 
     static {
@@ -34,9 +39,6 @@ public class Deserialization {
 
         // Don't fail on unknown properties during deserialization
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-
-        // Enable default typing for polymorphic serialization (if needed)
-        // mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
     }
 
     /**
@@ -97,6 +99,45 @@ public class Deserialization {
         return getAllParticipants().size();
     }
 
+    public static List<Organisateur> getAllOrganisateurs() {
+        try {
+            File file = new File(ORGANISATEUR_DATA_FILE_PATH);
+
+            // Check if file exists and has content
+            if (!file.exists() || file.length() == 0) {
+                System.out.println("No data file found or file is empty.");
+                return new ArrayList<>();
+            }
+
+            // Read and parse JSON file
+            String content = Files.readString(file.toPath(), StandardCharsets.UTF_8);
+            List<Organisateur> organisateurs = mapper.readValue(content, new TypeReference<List<Organisateur>>() {});
+
+            System.out.println("Successfully loaded " + organisateurs.size() + " organisateurs.");
+            return organisateurs;
+
+        } catch (Exception e) {
+            System.err.println("Error reading organisateurs from file:");
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public static Organisateur getOrganisateur(String username) {
+        List<Organisateur> organisateurs = getAllOrganisateurs();
+
+        for (Organisateur organisateur : organisateurs) {
+            if (organisateur.getId().equals(username)) {
+                return organisateur;
+            }
+        }
+
+        return null; // Aucun organisateur trouvé avec ce username
+    }
+
+    public static int getOrganisateurCount() {
+        return getAllOrganisateurs().size();
+    }
 
     public static List<Evenement> getAllEvenements() {
         try {
@@ -139,7 +180,7 @@ public class Deserialization {
         return getAllEvenements().size();
     }
 
-    public static HashMap<String, Integer> getParticipantsAuxEvenements(){
+    public static HashMap<String, List<Integer>> getParticipantsAuxEvenements(){
         try {
             File file = new File(PARTICIPANT_EVENT_FILE_PATH);
 
@@ -152,7 +193,7 @@ public class Deserialization {
             // Read and parse JSON file
             String content = Files.readString(file.toPath(), StandardCharsets.UTF_8);
 
-            return mapper.readValue(content, new TypeReference<HashMap<String, Integer>>() {});
+            return mapper.readValue(content, new TypeReference<HashMap<String, List<Integer>>>() {});
 
         } catch (Exception e) {
             System.err.println("Error reading participants from file:");

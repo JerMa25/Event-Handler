@@ -28,18 +28,21 @@ public class SubscribedListController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources){
-        HashMap<String, Integer> participantEvent = Deserialization.getParticipantsAuxEvenements();
+        HashMap<String, List<Integer>> participantEvent = Deserialization.getParticipantsAuxEvenements();
         List<Evenement> evenements = new ArrayList<>();
         ObservableList<String> evenementsDisplay = FXCollections.observableArrayList();
 
         // Get user's events in evenements
-        for(Map.Entry<String, Integer> entry : participantEvent.entrySet()){
+        for(Map.Entry<String, List<Integer>> entry : participantEvent.entrySet()){
             if(entry.getKey().equals(UserSession.getInstance().getUser().getId())){
-                Evenement event = Deserialization.getEvenement(entry.getValue());
-                if(event != null) {
-                    evenements.add(event);
-                    subscribedEvents.add(event); // Stocker pour la sélection
-                    evenementsDisplay.add(formatEventDisplay(event));
+                // Iterate through the list of event IDs for this participant
+                for(Integer eventId : entry.getValue()) {
+                    Evenement event = Deserialization.getEvenement(eventId);
+                    if(event != null) {
+                        evenements.add(event);
+                        subscribedEvents.add(event); // Stocker pour la sélection
+                        evenementsDisplay.add(formatEventDisplay(event));
+                    }
                 }
             }
         }

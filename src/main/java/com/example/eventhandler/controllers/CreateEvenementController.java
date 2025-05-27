@@ -250,7 +250,25 @@ public class CreateEvenementController implements Initializable {
             AlertBox.showAlert("Error", e.getMessage(), Alert.AlertType.ERROR);
             return;
         }if (success) {
-            upgradeToOrganisateur(UserSession.getInstance().getUser(), event);
+            boolean isInstance = true;
+            Participant p = UserSession.getInstance().getUser();
+            List<Organisateur> organisateurs = Deserialization.getAllOrganisateurs();
+            for(Organisateur organisateur : organisateurs){
+                if(p.getId().equals(organisateur.getId())){
+                    organisateur.getEvenementsOrganises().add(event);
+                    Serialization.saveAllOrganisateur(organisateurs);
+                    isInstance = false;
+                    break;
+                }
+            }
+            if (isInstance){
+                List<Evenement> evenements = new ArrayList<>();
+                evenements.add(event);
+                Organisateur org = new Organisateur(p.getId(), p.getNom(), p.getEmail(), p.getPassword(), evenements);
+                Serialization.addOrganisateur(org);
+                System.out.println("New organisateur '"+org.getId()+"' added successfully");
+            }
+
             System.out.println("Adding new event to existing records.");
             AlertBox.showAlert("Success", "Event created successfully!\nEventID: " + id, Alert.AlertType.INFORMATION);
             System.out.println("New event count: " + Deserialization.getEvenementCount());
@@ -259,44 +277,6 @@ public class CreateEvenementController implements Initializable {
         }
 
     }
-    
-
-    public static void upgradeToOrganisateur(Participant participant, Evenement newEvent) {
-        try {
-            List<Participant> participants = Deserialization.getAllParticipants();
-
-            for (int i = 0; i < participants.size(); i++) {
-
-                if (participant.getId().equals(participants.get(i).getId())) {
-                    Organisateur organisateur;
-
-                    if (participant instanceof Organisateur o) {
-                        organisateur = o;
-                    } else {
-                        organisateur = new Organisateur(
-                                participant.getId(),
-                                participant.getNom(),
-                                participant.getEmail(),
-                                participant.getPassword(),
-                                new ArrayList<>()
-                        );
-                    }
-
-                    organisateur.getEvenementsOrganises().add(newEvent);
-                    participants.set(i, organisateur); // replace in the list
-
-                    // Write updated list back to file
-                    Serialization.saveAllParticipant(participants);
-                    System.out.println("Participant upgraded to Organisateur.");
-                    return;
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     
     /**
      * Parses French date format like "Lundi, 21 Août 2025 à 19:00" to LocalDateTime

@@ -1,46 +1,24 @@
 [ {
   "id" : 1,
-  "nom" : "Yafe",
-  "date" : "2020-01-27T10:00:00",
-  "lieu" : "Yaounde",
+  "nom" : "Re des Pipos",
+  "date" : "2026-01-29T13:00:00",
+  "lieu" : "Polytechnique",
   "capaciteMax" : 200,
-  "duration" : 10800.000000000,
-  "artiste" : "Minks",
-  "genreMusical" : "eew"
+  "duration" : 12600.000000000,
+  "artiste" : "Maes",
+  "genreMusical" : "Slow"
 }, {
   "id" : 2,
-  "nom" : "Youpi",
-  "date" : "2005-06-23T13:00:00",
-  "lieu" : "Buea",
-  "capaciteMax" : 200,
-  "duration" : 14400.000000000,
-  "artiste" : "Locko",
-  "genreMusical" : "tyre"
-}, {
-  "id" : 3,
-  "nom" : "Re des pipos",
-  "date" : "2019-06-25T19:00:00",
-  "lieu" : "Polytech",
-  "capaciteMax" : 200,
-  "duration" : 10800.000000000,
-  "artiste" : "Rolain",
-  "genreMusical" : "raegge"
-}, {
-  "id" : 4,
-  "nom" : "Music",
-  "date" : "2012-01-24T03:00:00",
-  "lieu" : "Douala",
-  "capaciteMax" : 200,
-  "duration" : 14400.000000000,
-  "artiste" : "Maes",
-  "genreMusical" : "wqe"
-}, {
-  "id" : 5,
-  "nom" : "YaFe",
-  "date" : "2025-06-10T12:00:00",
-  "lieu" : "Yaounde",
-  "capaciteMax" : 300,
-  "duration" : 14400.000000000,
-  "artiste" : "Locko",
-  "genreMusical" : "Slow"
+  "nom" : "Aspy Summit meeting",
+  "date" : "2025-06-22T10:00:00",
+  "lieu" : "Polytechnique",
+  "capaciteMax" : 50,
+  "duration" : 9000.000000000,
+  "theme" : "Activities",
+  "intervenants" : [ {
+    "id" : "Jerma",
+    "nom" : "Tchami Jerry",
+    "email" : "tchamijerry@gmail.com",
+    "password" : "1234"
+  } ]
 } ]

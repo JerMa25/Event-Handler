@@ -26,6 +26,7 @@ import javafx.scene.text.FontWeight;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -34,27 +35,36 @@ import static com.example.eventhandler.AlertBox.showAlert;
 public class subscribeEventController implements Initializable{
     public ListView<String> listViewEvenements;
     private final List<Evenement> evenementsList = new ArrayList<>(); // Pour stocker les événements réels
+    public HashMap<String, List<Integer>> subscribed = Deserialization.getParticipantsAuxEvenements();
 
     @Override
     public void initialize(URL location, ResourceBundle resources){
-        List<Participant> participants = Deserialization.getAllParticipants();
-        List<Organisateur> organisateurs = new ArrayList<>();
+
+        List<Organisateur> organisateurs = Deserialization.getAllOrganisateurs();
         ObservableList<String> evenementsDisplay = FXCollections.observableArrayList();
 
-        // Récupérer tous les organisateurs
-        for (Participant participant : participants) {
-            if (participant instanceof Organisateur) {
-                organisateurs.add((Organisateur) participant);
-            }
-        }
 
-        // Parcourir tous les organisateurs et leurs événements
+        // Parcourir tous les organisateurs et recuperer leurs événements
         for (Organisateur organisateur : organisateurs) {
-            List<Evenement> evenementsOrganises = organisateur.getEvenementsOrganises();
+            if(UserSession.getInstance().getUser().getId().equals(organisateur.getId())){
+                continue;
+            }
 
-            for (Evenement evenement : evenementsOrganises) {
-                evenementsList.add(evenement); // Stocker l'événement réel
-                evenementsDisplay.add(formatEventDisplay(evenement, organisateur));
+            for(Evenement evenement : organisateur.getEvenementsOrganises()){
+                boolean dejaSouscris = false;
+                for (List<Integer> evenementsId : subscribed.values()){
+                    for (Integer i : evenementsId){
+                        if (i.equals(evenement.getId())){
+                            dejaSouscris = true;
+                            break;
+                        }
+                    }
+                    if (dejaSouscris) break;
+                }
+                if(!dejaSouscris){
+                    evenementsList.add(evenement); // Stocker l'événement réel
+                    evenementsDisplay.add(formatEventDisplay(evenement, organisateur));
+                }
             }
         }
 

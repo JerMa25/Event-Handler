@@ -3,6 +3,7 @@ package com.example.eventhandler.persistence;
 import com.example.eventhandler.exceptions.EvenementDejaExistantException;
 import com.example.eventhandler.exceptions.ParticipantDejaExistantException;
 import com.example.eventhandler.models.evenement.Evenement;
+import com.example.eventhandler.models.personne.Organisateur;
 import com.example.eventhandler.models.personne.Participant;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -14,6 +15,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,9 +23,11 @@ import java.util.List;
 import java.util.Map;
 
 public class Serialization {
-    private static final String PARTICIPANT_DATA_FILE_PATH = "/home/jerma/Desktop/Cours 3GI/Semestre 2/POO 2/TP/Event-Handler/ParticipantData.json";
-    private static final String EVENT_DATA_FILE_PATH = "/home/jerma/Desktop/Cours 3GI/Semestre 2/POO 2/TP/Event-Handler/EvenementData.json";
-    private static final String PARTICIPANT_EVENT_FILE_PATH = "/home/jerma/Desktop/Cours 3GI/Semestre 2/POO 2/TP/Event-Handler/ParticipantsAuxEvenements.json";
+    private static final String PROJECT_ROOT = System.getProperty("user.dir");
+    private static final String PARTICIPANT_DATA_FILE_PATH = Paths.get(PROJECT_ROOT, "ParticipantData.json").toString();
+    private static final String EVENT_DATA_FILE_PATH = Paths.get(PROJECT_ROOT, "EvenementData.json").toString();
+    private static final String PARTICIPANT_EVENT_FILE_PATH = Paths.get(PROJECT_ROOT, "ParticipantsAuxEvenements.json").toString();
+    private static final String ORGANISATEUR_DATA_FILE_PATH = Paths.get(PROJECT_ROOT, "OrganisateurData.json").toString();
     private static final ObjectMapper mapper = new ObjectMapper();
 
     static {
@@ -41,9 +45,6 @@ public class Serialization {
 
         // Don't fail on unknown properties during deserialization
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-
-        // Enable default typing for polymorphic serialization (if needed)
-        // mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
     }
 
     /**
@@ -103,6 +104,61 @@ public class Serialization {
         try {
             mapper.writeValue(new File(PARTICIPANT_DATA_FILE_PATH), participants);
             System.out.println("Successfully saved " + participants.size() + " participants.");
+        } catch (Exception e) {
+            System.err.println("Error saving participants to file:");
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean addOrganisateur(Organisateur organisateur){
+        try {
+            File outputFile = new File(ORGANISATEUR_DATA_FILE_PATH);
+            List<Organisateur> organisateurs = new ArrayList<>();
+
+            // Read existing data if file exists
+            if (outputFile.exists() && outputFile.length() > 0) {
+                try {
+                    String existingContent = Files.readString(outputFile.toPath(), StandardCharsets.UTF_8);
+                    organisateurs = mapper.readValue(existingContent, new TypeReference<List<Organisateur>>() {});
+                } catch (Exception e) {
+                    System.out.println("Could not read existing file or file is not a valid JSON array. Starting fresh.");
+                    organisateurs = new ArrayList<>();
+                }
+            }
+
+            // Check for duplicates BEFORE adding
+            boolean usernameExists = organisateurs.stream()
+                    .anyMatch(existing -> existing.getId().equals(organisateur.getId()));
+            boolean emailExists = organisateurs.stream()
+                    .anyMatch(existing -> existing.getEmail().equalsIgnoreCase(organisateur.getEmail()));
+
+            if (usernameExists || emailExists) {
+                return false;
+            }
+
+            // Add new participant to the list
+            organisateurs.add(organisateur);
+
+            // Write updated list to file
+            /*mapper.writerFor(new TypeReference<List<Participant>>() {}).withAttribute("type","Participant");    I'll be back*/
+            String jsonString = mapper.writeValueAsString(organisateurs);
+            try (FileOutputStream fos = new FileOutputStream(outputFile)) {
+                fos.write(jsonString.getBytes(StandardCharsets.UTF_8));
+            }
+
+            System.out.println("Organisateur added successfully!");
+            return true;
+        }catch (Exception e) {
+            System.err.println("Error during organisateur addition:");
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static void saveAllOrganisateur(List<Organisateur> organisateurs) {
+        try {
+            mapper.writeValue(new File(ORGANISATEUR_DATA_FILE_PATH), organisateurs);
+            System.out.println("Successfully saved " + organisateurs.size() + " participants.");
         } catch (Exception e) {
             System.err.println("Error saving participants to file:");
             e.printStackTrace();
@@ -179,13 +235,13 @@ public class Serialization {
     public static boolean addParticipantsAuxEvenements(Participant participant, Evenement evenement) throws EvenementDejaExistantException {
         try {
             File outputFile = new File(PARTICIPANT_EVENT_FILE_PATH);
-            HashMap<String, Integer> participantEvent = new HashMap<>();
+            HashMap<String, List<Integer>> participantEvent = new HashMap<>();
 
             // Read existing data if file exists
             if (outputFile.exists() && outputFile.length() > 0) {
                 try {
                     String existingContent = Files.readString(outputFile.toPath(), StandardCharsets.UTF_8);
-                    participantEvent = mapper.readValue(existingContent, new TypeReference<HashMap<String, Integer>>() {});
+                    participantEvent = mapper.readValue(existingContent, new TypeReference<HashMap<String, List<Integer>>>() {});
                     System.out.println("Existing data loaded from file.");
                 } catch (Exception e) {
                     System.out.println("Could not read existing file or file is not a valid JSON. Starting fresh.");
@@ -195,20 +251,31 @@ public class Serialization {
                 // File doesn't exist or is empty, create new HashMap
                 System.out.println("File doesn't exist or is empty. Creating new registration file.");
                 participantEvent = new HashMap<>();
-
-                // Create parent directories if they don't exist
-                outputFile.getParentFile().mkdirs();
             }
 
-            // Check if participant is already registered for this event
             String participantKey = participant.getId();
-            if (participantEvent.containsKey(participantKey) && participantEvent.get(participantKey).equals(evenement.getId())) {
-                System.out.println("Participant " + participant.getId() + " is already registered for event " + evenement.getNom());
-                return false; // Already registered
-            }
+            int eventId = evenement.getId();
 
-            // Add the registration
-            participantEvent.put(participantKey, evenement.getId());
+            // Check if participant exists in the map
+            if (participantEvent.containsKey(participantKey)) {
+                List<Integer> eventList = participantEvent.get(participantKey);
+
+                // Check if the event is already in the participant's event list
+                if (eventList.contains(eventId)) {
+                    System.out.println("Participant " + participant.getId() + " is already registered for event " + evenement.getNom());
+                    return false; // Already registered for this event
+                } else {
+                    // Add the event to the existing list
+                    eventList.add(eventId);
+                    System.out.println("Added event " + evenement.getNom() + " to existing participant " + participant.getId());
+                }
+            } else {
+                // Create new list for new participant
+                List<Integer> newEventList = new ArrayList<>();
+                newEventList.add(eventId);
+                participantEvent.put(participantKey, newEventList);
+                System.out.println("Created new registration for participant " + participant.getId());
+            }
 
             // Write updated map to file
             String jsonString = mapper.writeValueAsString(participantEvent);

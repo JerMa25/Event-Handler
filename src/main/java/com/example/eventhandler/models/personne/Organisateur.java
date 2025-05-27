@@ -1,17 +1,23 @@
 package com.example.eventhandler.models.personne;
 
 import com.example.eventhandler.models.evenement.Evenement;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
 public class Organisateur extends Participant{
-    @JsonProperty("evenements")
     private List<Evenement> evenementsOrganises;
 
     public Organisateur(){ super();}
 
-    public Organisateur(String id, String nom, String email, String password, List<Evenement> evenementsOrganises){
+    @JsonCreator
+    public Organisateur(
+            @JsonProperty("username")String id,
+            @JsonProperty("nom")String nom,
+            @JsonProperty("email")String email,
+            @JsonProperty("password")String password,
+            @JsonProperty("evenements")List<Evenement> evenementsOrganises){
         super(id, nom, email, password);
         this.evenementsOrganises = evenementsOrganises;
     }

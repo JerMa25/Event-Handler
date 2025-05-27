@@ -1,0 +1,30 @@
+[ {
+  "nom" : "Tchami Jerry",
+  "email" : "tchamijerry@gmail.com",
+  "password" : "1234",
+  "id" : "Jerma",
+  "evenementsOrganises" : [ {
+    "id" : 1,
+    "nom" : "Re des Pipos",
+    "date" : "2026-01-29T13:00:00",
+    "lieu" : "Polytechnique",
+    "capaciteMax" : 200,
+    "duration" : 12600.000000000,
+    "artiste" : "Maes",
+    "genreMusical" : "Slow"
+  }, {
+    "id" : 2,
+    "nom" : "Aspy Summit meeting",
+    "date" : "2025-06-22T10:00:00",
+    "lieu" : "Polytechnique",
+    "capaciteMax" : 50,
+    "duration" : 9000.000000000,
+    "theme" : "Activities",
+    "intervenants" : [ {
+      "id" : "Jerma",
+      "nom" : "Tchami Jerry",
+      "email" : "tchamijerry@gmail.com",
+      "password" : "1234"
+    } ]
+  } ]
+} ]

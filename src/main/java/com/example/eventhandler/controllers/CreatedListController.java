@@ -179,10 +179,10 @@ public class CreatedListController implements Initializable {
 
     private int getParticipantCount(Evenement evenement) {
         try {
-            HashMap<String, Integer> participantEvent = Deserialization.getParticipantsAuxEvenements();
+            HashMap<String, List<Integer>> participantEvent = Deserialization.getParticipantsAuxEvenements();
             int count = 0;
 
-            for(Map.Entry<String, Integer> entry : participantEvent.entrySet()) {
+            for(Map.Entry<String, List<Integer>> entry : participantEvent.entrySet()) {
                 if(entry.getValue().equals(evenement.getId())) {
                     count++;
                 }
@@ -197,12 +197,12 @@ public class CreatedListController implements Initializable {
 
     private void viewEventParticipants(Evenement evenement) {
         try {
-            HashMap<String, Integer> participantEvent = Deserialization.getParticipantsAuxEvenements();
+            HashMap<String, List<Integer>> participantEvent = Deserialization.getParticipantsAuxEvenements();
             List<Participant> allParticipants = Deserialization.getAllParticipants();
             List<String> eventParticipants = new ArrayList<>();
 
             // Trouver tous les participants inscrits à cet événement
-            for(Map.Entry<String, Integer> entry : participantEvent.entrySet()) {
+            for(Map.Entry<String, List<Integer>> entry : participantEvent.entrySet()) {
                 if(entry.getValue().equals(evenement.getId())) {
                     // Trouver le participant correspondant
                     for(Participant p : allParticipants) {
